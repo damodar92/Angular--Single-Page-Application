@@ -1,0 +1,54 @@
+<h1> Posts </h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <select class="form-control" (change)="reloadPosts({ userId: u.value })" #u>
+            <option value="">Select a user...</option>
+            <option *ngFor="#user of users" value="{{ user.id }}">
+                {{ user.name }}
+            </option>
+        </select>
+        <!--<i *ngIf="postsLoading" class="fa fa-spinner fa-spin fa-3x"></i>-->
+        <loading-icon [visible]="postsLoading"></loading-icon>
+        <pagination [items]="posts" (page-changed)="onPageChanged($event)"></pagination>
+        <ul class="list-group">
+            <li *ngFor="#post of pagedPosts" 
+            class="list-group-item"
+            [class.active]="currentPost == post" 
+            (click)= "postDetails(post)">
+                {{post.title}}
+            </li>
+        </ul>
+    </div>
+    <!--The common pattern is to create a new variable 
+    to keep track of which button is clicked, to reassign 
+    that variable on a click event, and to bind the active class 
+    on whether or not the current button equals the selected button.  -->
+    <div class="col-md-6">
+        <div *ngIf="currentPost" class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{currentPost.title}}</h3>
+            </div>
+            <div class="panel-body">
+                <p>{{currentPost.body}}</p>
+                <hr>
+                <loading-icon [visible]="commentsLoading"></loading-icon>
+                <div class="media" *ngFor="#comment of currentPost.comments">
+                    <div class="media-left">
+                        <a>
+                            <img class="media-object thumbnail" 
+                                    src="http://lorempixel.com/80/80/people?random={{comment.id}}"
+                                    alt="...">
+                        </a> 
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            {{comment.name}}
+                        </h4>
+                            {{comment.body}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
